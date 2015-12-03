@@ -1,0 +1,47 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure(2) do |config|
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 8192
+    v.cpus = 6
+  end
+
+
+#Set IP
+  config.vm.network "public_network", ip: "10.0.2.15", bridge: "eth0"
+  
+#Mount host machine to vagrant machine
+  config.vm.synced_folder "/var/www/html/master/basicops", "/home/vagrant/results"
+
+
+#import ubuntu
+  config.vm.box = "trusty64"
+  config.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+
+#install basic packages and security settings. And clone devstack
+  config.vm.provision "shell" , path: "liberty-setup.sh"
+  
+#create local pip repo
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :box
+    config.cache.enable :generic, { "pip" => { :cache_dir => "/var/cache/pip" } }   
+     config.vm.provision "file" , source: "pip.conf", destination: "/home/vagrant/.pip/pip.conf"
+  end
+
+
+#copy local.conf into devstack
+  config.vm.provision "file" , source: "local.conf" , destination: "/home/vagrant/devstack/local.conf"
+
+#runs stack.sh
+  config.vm.provision "shell" , path: "build.sh" 
+
+#depending on arg. runs test.
+  config.vm.provision "shell" , path: "scenariotest.sh"
+
+end
