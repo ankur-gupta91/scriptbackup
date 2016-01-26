@@ -5,9 +5,11 @@ sudo python setup.py install
 sudo easy_install pip
 sudo pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U
 sudo apt-get autoremove -y python-six
+sudo pip install --upgrade tempest-lib
 testr run tempest.api.network --subunit | subunit-trace --no-failure-debug -f
 sudo mkdir /home/vagrant/results/api
 sudo mkdir /home/vagrant/results/api/logs
+sudo rm -rf /home/vagrant/results/api/apiresults.html
 subunit2html .testrepository/0 /home/vagrant/results/api/apiresults.html
 sudo chmod 755 /home/vagrant/results/api/apiresults.html
 

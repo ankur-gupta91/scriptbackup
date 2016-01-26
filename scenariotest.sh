@@ -5,11 +5,12 @@ sudo python setup.py install
 sudo easy_install pip
 sudo pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U
 sudo apt-get autoremove -y python-six
-
+sudo pip install --upgrade tempest-lib
 testr run tempest.scenario.test_network_basic_ops --subunit | subunit-trace --no-failure-debug -f
 
 sudo mkdir /home/vagrant/results/basicops
 sudo mkdir /home/vagrant/results/basicops/logs
+sudo rm -rf /home/vagrant/results/api/scenarioresults.html
 subunit2html .testrepository/0 /home/vagrant/results/basicops/scenarioresults.html
 sudo chmod 755 /home/vagrant/results/basicops/scenarioresults.html
 

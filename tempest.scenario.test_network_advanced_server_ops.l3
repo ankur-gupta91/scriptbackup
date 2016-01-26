@@ -17,7 +17,7 @@ Vagrant.configure(2) do |config|
   config.vm.network "public_network", ip: "10.4.1.3", bridge: "eth0"
   
 #Mount host machine to vagrant machine
-  config.vm.synced_folder "/var/www/html/master/advops", "/home/vagrant/results"
+  config.vm.synced_folder "/var/www/html/l3/advops", "/home/vagrant/results"
 
 
 #import ubuntu
@@ -36,7 +36,7 @@ Vagrant.configure(2) do |config|
 
 
 #copy local.conf into devstack
-  config.vm.provision "file" , source: "local.conf" , destination: "/home/vagrant/devstack/local.conf"
+  config.vm.provision "file" , source: "l3.local.conf" , destination: "/home/vagrant/devstack/local.conf"
 
 #runs stack.sh
   config.vm.provision "shell" , path: "build.sh" 
